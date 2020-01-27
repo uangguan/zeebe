@@ -82,6 +82,7 @@ public class JobErrorThrownProcessor implements TypedRecordProcessor<JobRecord> 
         jobState.throwError(record.getKey(), job);
 
       } else {
+        // TODO (saig0): update job state to 'error thrown'
         // mark job as failed and create an incident
         job.setRetries(0);
         jobState.fail(record.getKey(), job);
@@ -181,7 +182,7 @@ public class JobErrorThrownProcessor implements TypedRecordProcessor<JobRecord> 
 
     incidentEvent.reset();
     incidentEvent
-        .setErrorType(ErrorType.JOB_NO_RETRIES)
+        .setErrorType(ErrorType.UNHANDLED_ERROR_EVENT)
         .setErrorMessage(incidentErrorMessage)
         .setBpmnProcessId(job.getBpmnProcessIdBuffer())
         .setWorkflowKey(job.getWorkflowKey())
@@ -191,6 +192,7 @@ public class JobErrorThrownProcessor implements TypedRecordProcessor<JobRecord> 
         .setJobKey(key)
         .setVariableScopeKey(job.getElementInstanceKey());
 
+    // TODO (saig0): need a failed workflow instance record for the incident
     streamWriter.appendNewCommand(IncidentIntent.CREATE, incidentEvent);
   }
 

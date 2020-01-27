@@ -122,5 +122,7 @@ public final class ResolveIncidentProcessor implements TypedRecordProcessor<Inci
     if (job != null) {
       jobState.resolve(jobKey, job);
     }
+
+    // TODO (saig0): if job is in state 'error-thrown' then try to handle the error again
   }
 }
